@@ -86,7 +86,73 @@ Vamos a empezar con el modelado de **Producto**, la clase Producto.java debe est
 Dentro del paquete model, se procederá a definir la clase de dominio que representará la tabla dentro de la base de datos. En este caso dado que se trata del primer microservicio que estamos haciendo utilizaremos únicamente tipos de datos elementales para facilitar la comprensión.
 
 Seleccione ***New > Java Class*** e ingrese el nombre **Producto**.
-![alt text](<Captura de pantalla 2026-10-02 192934-2.png>)
+```java
+package com.distribuidos.producto.model;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import lombok.Getter;
+import lombok.Setter;
+
+
+@Entity
+public class Producto {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    private String nombre;
+    private float precio;
+    private int stock;
+
+    public Producto() {
+    }
+
+    public Producto(Long id, String nombre, float precio, int stock) {
+        this.id = id;
+        this.nombre = nombre;
+        this.precio = precio;
+        this.stock = stock;
+    }
+
+	public Long getId() {
+		return id;
+	}
+
+	public String getNombre() {
+		return nombre;
+	}
+
+	public float getPrecio() {
+		return precio;
+	}
+
+	public int getStock() {
+		return stock;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public void setNombre(String nombre) {
+		this.nombre = nombre;
+	}
+
+	public void setPrecio(float precio) {
+		this.precio = precio;
+	}
+
+	public void setStock(int stock) {
+		this.stock = stock;
+	}
+    
+    
+    
+}
+```java
+
 ```java
 package com.distribuidos.producto.model;
 
@@ -129,7 +195,46 @@ implementa los metodos de la clase interfaz service
 ![alt text](<Captura de pantalla 2026-10-02 200511.png>)
 # 8. Creación de Controller(endpoints)
 para recibir las solicitudes del usuario y dirigirlas hacia la acción correspondiente
-![alt text](image.png)
+# Producto Controller
+
+```java
+package com.disribuidos.producto.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.distribuidos.producto.model.Producto;
+import com.distribuidos.producto.service.IProductoService;
+import com.distribuidos.producto.service.ProductoService;
+
+import java.util.List;
+import org.springframework.ui.Model;
+
+
+@RestController
+public class ProductoController {
+
+    @Autowired
+    private ProductoService serviceProd;
+
+    @PostMapping("/productos/crear")
+    public String crearProducto(@RequestBody Producto prod){
+        serviceProd.saveProducto(prod);
+        return "Dado de alta OK";
+    }
+
+    @GetMapping("/productos/listar")
+    public List<Producto> getProducto(){
+        return serviceProd.getProductos();
+    }
+
+}
+
+```java
+
 # 9. Configuración de properties 
 ![alt text](<Captura de pantalla 2026-10-02 201028.png>)
 # POST
